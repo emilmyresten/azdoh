@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "azdoh"
+version = "0.1.0"
+description = "check stuff when developing azure pipelines"
+authors = ["Emil Myresten <emil.myresten@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pytest = "^8.3.3"
+pyyaml = "^6.0.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
