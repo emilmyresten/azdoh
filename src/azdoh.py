@@ -2,7 +2,8 @@ import yaml
 from pathlib import Path
 import re
 import uuid
-import json
+import random
+import string
 
 from shell import execute
 
@@ -48,11 +49,14 @@ def replace_all(script: str, replacements: list[dict]) -> str:
 def sanitize(script) -> str:
     """
     Sanitize script by removing azure.pipelines specific expressions e.g. ${{ parameters.someParam }}
-    This prevents shellcheck from irrelevant complaints
+    This prevents shellcheck from irrelevant complaints. Keeping the $ signifies that it is still a variable.
     """
     expressions = find_azdopipe_expressions(script)
     replacements = [
-        {"original": expression, "replacement": str(uuid.uuid4())}
+        {
+            "original": expression,
+            "replacement": f"$VAR_{''.join(random.choices(string.ascii_uppercase, k=7))}",
+        }
         for expression in expressions
     ]
     return replace_all(script, replacements)
