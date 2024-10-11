@@ -1,5 +1,13 @@
-from azdoh import main
+from azdoh import sanitize, find_azdopipe_expressions
 
 
-def test_main():
-    assert main()["steps"][0]["task"] == "Bash@3"
+def test_find_azdo_expressions():
+    result = find_azdopipe_expressions(
+        "${{ parameter.azdo }}${{ parameter.expression }} ${{ parameter.azdo }}"
+    )
+    assert "${{ parameter.azdo }}" in result and "${{ parameter.expression }}" in result
+
+
+def test_sanitize():
+    result = sanitize("${{ parameter.someParam }}")
+    assert "${{ parameter.someParam }}" not in result

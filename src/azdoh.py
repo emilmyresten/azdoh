@@ -2,41 +2,15 @@ import yaml
 from pathlib import Path
 import re
 import uuid
+import json
 
 from shell import execute
-
-example_yaml = """
-steps:
-  - task: Bash@3
-    displayName: Copy prometheusrule.yaml from build repo to ${{ parameters.pipelineDir }}/${{ parameters.helmChartRelativeDir }}/templates
-    inputs:
-      targetType: inline
-      script: |
-        #!/bin/sh
-
-        # Order is important because loop will "break" after first found entry
-        Rules=("${{ parameters.buildArtifactsDir }}/helm/${{ parameters.env }}/prometheusrules.yaml" "${{ parameters.buildArtifactsDir }}/helm/prometheusrules.yaml")
-
-        # Remove prometheusrules.yaml from previous environment
-        rm ${{ parameters.pipelineDir }}/${{ parameters.helmChartRelativeDir }}/templates/prometheusrules.yaml
-
-        for rule in ${Rules[*]}; do
-          echo $rule
-          if [ -f $rule ];
-          then
-            echo "Found rule: $rule"
-            cp $rule ${{ parameters.pipelineDir }}/${{ parameters.helmChartRelativeDir }}/templates
-            ls -al ${{ parameters.pipelineDir }}/${{ parameters.helmChartRelativeDir }}/templates
-            break
-          fi
-        done
-"""
 
 
 def write_to_tmp(script: str) -> Path:
     tmp_dir = Path("tmp")
     tmp_dir.mkdir(exist_ok=True)
-    tmp_file = Path("tmp/tmp_file")
+    tmp_file = Path(f"tmp/tmp_file-{str(uuid.uuid4())}")
     with open(tmp_file, "w") as tf:
         tf.write(script)
     return tmp_file
@@ -85,6 +59,11 @@ def sanitize(script) -> str:
 
 
 def shellcheck(script) -> str:
+    """
+    Perform shellcheck of script.
+    Need to dump to tmp file to properly run shellcheck.
+    """
+    print(f"---- Performing shellcheck ----")
     santized_script = sanitize(script)
     tmp_file = write_to_tmp(santized_script)
     result = execute(f"shellcheck {tmp_file.absolute()}", return_output=True)
@@ -92,11 +71,45 @@ def shellcheck(script) -> str:
     return result
 
 
-def main() -> str:
-    y = yaml.safe_load(example_yaml)
-    return y
+def bash3_handler(task: dict):
+    ## all logic for handling bash3 tasks
+    display_name = task["displayName"]
+    script = task["inputs"]["script"]
+    print(f"#### Bash@3 task {display_name} ####")
+    if script is not None:
+        print(shellcheck(script))
+    else:
+        print(f"No script found for Bash@3 task {display_name}, targetType not inline?")
+
+
+handlers = {"task": {"bash@3": [bash3_handler]}}
+
+
+def recursive_kv_walk(yml: dict):
+    for k, v in yml.items():
+        if isinstance(v, dict) or isinstance(v, list):  # depth-first search
+            recursive_walk(v)
+        elif k.lower() in handlers.keys() and v.lower() in handlers[k.lower()].keys():
+            [handler(yml) for handler in handlers[k.lower()][v.lower()]]
+
+
+def recursive_walk(yml: dict | list):
+    """
+    This function recursively walks the parsed dictionary to find tasks for which rules are defined.
+    Currently only want to execute shellcheck on Bash@3 tasks
+    """
+    if isinstance(yml, dict):
+        recursive_kv_walk(yml)
+    elif isinstance(yml, list):
+        for maybe_dict_or_list in yml:
+            recursive_walk(maybe_dict_or_list)
+
+
+def main():
+    with open("./example-azdo-file.yml", "r") as f:
+        yml = yaml.safe_load(f)
+    recursive_walk(yml)
 
 
 if __name__ == "__main__":
-    script = main()["steps"][0]["inputs"]["script"]
-    print(shellcheck(script))
+    main()
