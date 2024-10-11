@@ -1,5 +1,7 @@
 import yaml
 from pathlib import Path
+import re
+import uuid
 
 from shell import execute
 
@@ -46,8 +48,45 @@ def cleanup_tmp(tmp_file: Path):
     tmp_dir.rmdir()
 
 
-def shellcheck(script):
-    tmp_file = write_to_tmp(script)
+def find_azdopipe_expressions(script: str) -> list[str]:
+    """
+    Find occurrencese of ${{ }}
+    """
+    pattern = r"\${{ [A-Za-z.]+ }}"
+    matches = re.findall(pattern, script)
+    return set(matches)
+
+
+def replace_all(script: str, replacements: list[dict]) -> str:
+    """
+    Recursively replace all occurrences of original text with replacement
+    """
+    if len(replacements) == 0:
+        return script
+
+    replacement = replacements[0]
+    return replace_all(
+        script.replace(replacement["original"], replacement["replacement"]),
+        replacements[1:],
+    )
+
+
+def sanitize(script) -> str:
+    """
+    Sanitize script by removing azure.pipelines specific expressions e.g. ${{ parameters.someParam }}
+    This prevents shellcheck from irrelevant complaints
+    """
+    expressions = find_azdopipe_expressions(script)
+    replacements = [
+        {"original": expression, "replacement": str(uuid.uuid4())}
+        for expression in expressions
+    ]
+    return replace_all(script, replacements)
+
+
+def shellcheck(script) -> str:
+    santized_script = sanitize(script)
+    tmp_file = write_to_tmp(santized_script)
     result = execute(f"shellcheck {tmp_file.absolute()}", return_output=True)
     cleanup_tmp(tmp_file)
     return result

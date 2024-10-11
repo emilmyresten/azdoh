@@ -12,5 +12,7 @@
 4. poetry run pytest
 
 
+# Todos
 
-
+- shellcheck all bash tasks in a given file
+- set up what to do on specific task i.e. on bash run shellcheck
