@@ -1,7 +1,16 @@
 ### Requirements:
+- poetry
+- pyenv
 - shellcheck
 
 
-export PYTHONPATH=$(pwd)/src
+# Run instructions
 
-where pwd is project root.
+1. export PYTHONPATH=$(pwd)/src where pwd is project root.
+2. poetry shell
+3. poetry install
+4. poetry run pytest
+
+
+
+
