@@ -10,3 +10,6 @@
 2. poetry shell
 3. poetry install
 4. poetry run pytest
+
+
+Azdoh assumes it is being invoked from the project root.
