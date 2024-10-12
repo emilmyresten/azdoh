@@ -34,7 +34,8 @@ def find_python3_script_locations(script: str, working_directory: str) -> list[P
         paths = [
             (
                 prepend_working_directory(path, working_directory)
-                if not path.startswith("/")  ## this would mean it's an absolute path
+                if working_directory is not None
+                and not path.startswith("/")  ## this would mean it's an absolute path
                 else path
             )
             for path in paths
@@ -43,11 +44,11 @@ def find_python3_script_locations(script: str, working_directory: str) -> list[P
     return []
 
 
-def python3_script_sanitycheck(script: str, working_directory: str) -> str:
+def python3_script_sanitycheck(script: str, working_directory: str) -> list[dict]:
     """
     Perform sanity check to ensure the files given in the pipeline exist in the project
     """
-    print_job_start("python3 script sanity check")
+    print_job_start("Sanity check: does script really exist?")
     paths = find_python3_script_locations(script, working_directory)
     results = [
         {"path": str(path.absolute()), "exists": check_if_file_exists(path)}
