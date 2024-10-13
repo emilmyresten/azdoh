@@ -4,6 +4,10 @@ version = "0.1.0"
 description = "check stuff when developing azure pipelines"
 authors = ["Emil Myresten <emil.myresten@gmail.com>"]
 readme = "README.md"
+packages = [{include = "azdoh", from = "src"}]
+
+[tool.poetry.scripts]
+azdoh = "azdoh.main:main"
 
 [tool.poetry.dependencies]
 python = "^3.12"

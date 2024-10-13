@@ -3,14 +3,14 @@ import logging
 
 from pathlib import Path
 
-from common.text import (
+from azdoh.common.text import (
     find_azdo_expressions,
     replace_all,
     log_job_start,
     sanitize,
     find_sanitized_azdo_expressions,
 )
-from filesystem.files import check_if_file_exists
+from azdoh.filesystem.files import check_if_file_exists
 
 
 def get_relative_working_directory(working_directory: str) -> str:

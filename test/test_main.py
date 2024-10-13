@@ -1,5 +1,11 @@
-from common.text import find_azdo_expressions
-from handler.task.bash3.job.shellcheck import sanitize
+from click.testing import CliRunner
+
+from azdoh.common.text import find_azdo_expressions
+from azdoh.handler.task.bash3.job.shellcheck import sanitize
+from azdoh.main import main
+
+
+## System tests: run azdoh on an example yaml and assert on the output. Just mock the open() call in azdoh.main, rest of the script should be pure functions.
 
 
 def test_find_azdo_expressions():

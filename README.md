@@ -1,6 +1,10 @@
 ### Requirements:
+infra:
 - poetry
 - pyenv
+- pipx
+
+deps:
 - shellcheck
 
 
@@ -14,6 +18,9 @@
 
 Azdoh assumes it is being invoked from the project root.
 
+
+### run as standalone executable:
+pipx install . in project root, then invoke azdoh, to reflect new changes use --force
 
 # todo:
 - write tests

@@ -1,7 +1,7 @@
 import logging
 import re
 
-from common.text import log_job_start
+from azdoh.common.text import log_job_start
 
 
 def get_script_arguments(script: str) -> str:

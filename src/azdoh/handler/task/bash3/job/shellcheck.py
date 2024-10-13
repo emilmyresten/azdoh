@@ -1,8 +1,8 @@
 import logging
 
-from shell import execute
-from filesystem.tmp import write_content_to_tmp_file, delete_tmp_file
-from common.text import log_job_start, sanitize
+from azdoh.shell import execute
+from azdoh.filesystem.tmp import write_content_to_tmp_file, delete_tmp_file
+from azdoh.common.text import log_job_start, sanitize
 
 
 def shellcheck(script) -> str:

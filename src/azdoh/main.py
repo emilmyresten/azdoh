@@ -2,8 +2,8 @@ import yaml
 import click
 import logging
 
-from handler.task.bash3.handler import bash3_handler
-from filesystem.tmp import create_tmp_dir, delete_tmp_dir
+from azdoh.handler.task.bash3.handler import bash3_handler
+from azdoh.filesystem.tmp import create_tmp_dir, delete_tmp_dir
 
 """
 The handler is invoked on the given key-value pair, case insensitive.

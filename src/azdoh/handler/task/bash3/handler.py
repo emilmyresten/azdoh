@@ -1,9 +1,11 @@
 import logging
 
-from common.text import log_handler_start, sanitize
-from handler.task.bash3.job.shellcheck import shellcheck
-from handler.task.bash3.job.python3_script_sanitycheck import python3_script_sanitycheck
-from handler.task.bash3.job.python3_named_arguments import python3_named_arguments
+from azdoh.common.text import log_handler_start, sanitize
+from azdoh.handler.task.bash3.job.shellcheck import shellcheck
+from azdoh.handler.task.bash3.job.python3_script_sanitycheck import (
+    python3_script_sanitycheck,
+)
+from azdoh.handler.task.bash3.job.python3_named_arguments import python3_named_arguments
 
 
 def bash3_handler(task: dict):
