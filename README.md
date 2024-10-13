@@ -13,3 +13,9 @@
 
 
 Azdoh assumes it is being invoked from the project root.
+
+
+# todo:
+- take file from cli
+- check that all parameters used are defined in parameter list?
+- ensure that all parameters without default is passed whenever used as template.

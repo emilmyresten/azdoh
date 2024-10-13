@@ -1,4 +1,7 @@
 import yaml
+import click
+import logging
+
 from handler.task.bash3.handler import bash3_handler
 from filesystem.tmp import create_tmp_dir, delete_tmp_dir
 
@@ -32,10 +35,23 @@ def recursive_walk(yml: dict | list):
             recursive_walk(maybe_dict_or_list)
 
 
-def main():
+@click.command()
+@click.option(
+    "-f",
+    "--file",
+    "file",
+    required=True,
+)
+@click.option(
+    "--loglevel",
+    type=click.Choice(["INFO", "DEBUG"], case_sensitive=False),
+    default="INFO",
+)
+def main(file: str, loglevel: str):
+    logging.basicConfig(level=loglevel)
     tmp_dir = create_tmp_dir()
     with open(
-        "/Users/emilmyresten/Development/personal/python/azdoh/example_project/azdo/bash3/python-in-bash-script.yml",
+        file,
         "r",
     ) as f:
         yml = yaml.safe_load(f)

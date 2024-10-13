@@ -1,6 +1,7 @@
+import logging
 import re
 
-from common.text import print_job_start
+from common.text import log_job_start
 
 
 def get_script_arguments(script: str) -> str:
@@ -28,20 +29,23 @@ def check_if_using_named_args(arglist: list[str]) -> bool:
     return using_named_args
 
 
-def python3_named_arguments(script: str) -> str:
-    print_job_start("Use of named arguments in Python script")
+def python3_named_arguments(script: str):
+    log_job_start("Use of named arguments in Python script")
     args = get_script_arguments(script)
     if not args:
-        return "No python script with args found"
+        logging.info("No python script with args found")
+        return
 
     arglist = get_argument_list(args)
     using_named_args = check_if_using_named_args(arglist)
     if using_named_args:
-        return "OK"
-
-    return "WARNING: Not using named arguments - @click.option(--<var_name>, required=True) when writing scripts with click."
+        logging.info("OK")
+    else:
+        logging.warning(
+            "Not using named arguments - @click.option(--<var_name>, required=True) when writing scripts with click."
+        )
 
 
 if __name__ == "__main__":
     script = 'export PYTHONPATH=$(pwd)\n python3 ./pkg/example_python.py --arg1 "arg1" --arg2 "arg2"\n echo "Done"'
-    print(python3_named_arguments(script))
+    python3_named_arguments(script)
