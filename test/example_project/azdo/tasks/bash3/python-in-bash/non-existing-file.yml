@@ -1,0 +1,17 @@
+parameters:
+  - name: paramOne
+    type: string
+  - name: paramTwo
+    type: string
+
+steps:
+  - task: Bash@3
+    displayName: Non-existing file
+    inputs:
+      targetType: inline
+      script: |
+        #!/bin/bash
+        PYTHONPATH=$(pwd)
+        export PYTHONPATH
+        python3 ./pkg/non-existant.py "${{ parameters.paramOne }}/${{ parameters.paramTwo }}"
+      workingDirectory: ${{ parameters.pipelineDir }}/src

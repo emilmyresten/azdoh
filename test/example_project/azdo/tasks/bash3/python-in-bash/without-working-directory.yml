@@ -1,0 +1,10 @@
+steps:
+  - task: Bash@3
+    displayName: Without workingDirectory
+    inputs:
+      targetType: inline
+      script: |
+        #!/bin/bash
+        PYTHONPATH=$(pwd)
+        export PYTHONPATH
+        python3 src/pkg/example_python.py

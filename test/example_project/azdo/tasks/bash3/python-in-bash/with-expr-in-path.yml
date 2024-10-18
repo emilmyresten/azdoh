@@ -1,0 +1,17 @@
+parameters:
+  - name: paramOne
+    type: string
+  - name: paramTwo
+    type: string
+
+steps:
+  - task: Bash@3
+    displayName: With ${{ expr }} in filepath
+    inputs:
+      targetType: inline
+      script: |
+        #!/bin/bash
+        PYTHONPATH=$(pwd)
+        export PYTHONPATH
+        python3 "${{ parameters.dir }}/pkg/example_python.py" "${{ parameters.paramOne }}/${{ parameters.paramTwo }}"
+      workingDirectory: ${{ parameters.dir }}/src

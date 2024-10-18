@@ -1,0 +1,17 @@
+parameters:
+  - name: paramOne
+    type: string
+  - name: paramTwo
+    type: string
+
+steps:
+  - task: Bash@3
+    displayName: Happy flow
+    inputs:
+      targetType: inline
+      script: |
+        #!/bin/bash
+        PYTHONPATH=$(pwd)
+        export PYTHONPATH
+        python3 ./pkg/example_python.py --arg1 "${{ parameters.paramOne }}" --arg2 "${{ parameters.paramTwo }}"
+      workingDirectory: ./src

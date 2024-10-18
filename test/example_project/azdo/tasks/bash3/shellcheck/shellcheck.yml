@@ -1,0 +1,17 @@
+steps:
+  - task: Bash@3
+    displayName: Shellcheck
+    continueOnError: true
+    inputs:
+      targetType: inline
+      script: |
+        # check if canary exists
+        if [ -n "$(helm list --filter $(HELM_RELEASE_NAME)-canary --short)" ]; then
+          kubernetesName=$(echo "$(HELM_RELEASE_NAME)" | tr '.' '-')
+          echo "Transformed $(HELM_RELEASE_NAME) -> $kubernetesName"
+          echo "Remove traffic from canary"
+          oc set route-backends "$kuber§netesName" "$kubernetesName"=100%
+          helm uninstall $(HELM_RELEASE_NAME)-canary --ignore-not-found
+        else
+          echo "No canary found for release $(HELM_RELEASE_NAME)"
+        fi

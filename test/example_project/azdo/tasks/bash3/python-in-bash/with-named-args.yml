@@ -1,0 +1,11 @@
+steps:
+  - task: Bash@3
+    displayName: With named arguments
+    inputs:
+      targetType: inline
+      script: |
+        #!/bin/bash
+        PYTHONPATH=$(pwd)
+        export PYTHONPATH
+        python3 ./pkg/example_python.py --arg1 "arg1" --arg2 "arg2"
+      workingDirectory: ./src
