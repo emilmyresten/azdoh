@@ -1,14 +1,19 @@
 import yaml
 import click
 import logging
+import re
 
 from azdoh.handler.task.bash3.handler import bash3_handler
+from azdoh.handler.template.handler import template_handler
 from azdoh.filesystem.tmp import create_tmp_dir, delete_tmp_dir
 
 """
-The handler is invoked on the given key-value pair, case insensitive.
+The handler is invoked on the given key-value pair, case insensitive, and value is matched with regex.
 """
-handlers = {"task": {"bash@3": [bash3_handler]}}
+handlers = {
+    "task": {r"bash@3": [bash3_handler]},
+    "template": {r".*": [template_handler]},
+}
 
 
 def dispatch(yml, k, v):
@@ -19,8 +24,14 @@ def recursive_kv_walk(yml: dict):
     for k, v in yml.items():
         if isinstance(v, dict) or isinstance(v, list):  # depth-first search
             recursive_walk(v)
-        elif k.lower() in handlers.keys() and v.lower() in handlers[k.lower()].keys():
-            dispatch(yml, k, v)
+        elif k.lower() in handlers.keys() and (
+            dispatch_key := next(
+                key_pattern
+                for key_pattern in handlers[k.lower()].keys()
+                if re.match(key_pattern, v.lower())
+            )
+        ):
+            dispatch(yml, k, dispatch_key)
 
 
 def recursive_walk(yml: dict | list):
