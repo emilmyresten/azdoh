@@ -7,6 +7,7 @@ from azdoh.handler.task.bash3.handler import bash3_handler
 from azdoh.handler.template.handler import template_handler
 from azdoh.filesystem.tmp import create_tmp_dir, delete_tmp_dir
 from azdoh.context import AzdohContext
+from azdoh.azdoh_logging import initialize_logger
 
 """
 The handler is invoked on the given key-value pair, case insensitive, and value is matched with regex.
@@ -56,11 +57,11 @@ def recursive_walk(context: AzdohContext, yml: dict | list):
 )
 @click.option(
     "--loglevel",
-    type=click.Choice(["INFO", "DEBUG"], case_sensitive=False),
+    type=click.Choice(["INFO", "DEBUG", "WARNING", "ERROR"], case_sensitive=False),
     default="INFO",
 )
 def main(file: str, loglevel: str):
-    logging.basicConfig(level=loglevel)
+    initialize_logger(loglevel=loglevel)
     tmp_dir = create_tmp_dir()
     with open(
         file,

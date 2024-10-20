@@ -57,15 +57,16 @@ def sanitize(
 
 
 def log_handler_start(content: str):
+    left_padding = "\n" + " " * 11
     upper_padding = "\n"
     inner = f"{"#" * 10} {content} {"#" * 10}"
     content_length = len(inner)
     start_end_block = "#" * content_length
     padding = f"{"#" * 10} {" " * len(content)} {"#" * 10}"
     logging.info(
-        "\n".join(
+        left_padding.join(
             [upper_padding, start_end_block, padding, inner, padding, start_end_block]
-        )
+        ).strip()
     )
 
 
