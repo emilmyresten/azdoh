@@ -1,0 +1,5 @@
+# Has missing, default, and redundant parameters.
+steps:
+  - template: /azdo/templates/callee.yml
+    parameters:
+      paramThree: ""

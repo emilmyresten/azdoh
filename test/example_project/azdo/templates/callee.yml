@@ -1,6 +1,9 @@
 parameters:
   - name: paramOne
     type: string
+  - name: paramTwo
+    default: false
+    type: boolean
 
 steps:
   -

@@ -1,0 +1,6 @@
+steps:
+  - template: /azdo/templates/callee.yml
+    parameters:
+      paramOne: ""
+      paramTwo: true
+      paramThree: ""

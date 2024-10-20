@@ -1,4 +1,4 @@
 steps:
-  - template: callee.yml
+  - template: /azdo/templates/callee.yml
     parameters:
       paramOne: ""
