@@ -6,6 +6,7 @@ import re
 from azdoh.handler.task.bash3.handler import bash3_handler
 from azdoh.handler.template.handler import template_handler
 from azdoh.filesystem.tmp import create_tmp_dir, delete_tmp_dir
+from azdoh.context import AzdohContext
 
 """
 The handler is invoked on the given key-value pair, case insensitive, and value is matched with regex.
@@ -16,14 +17,14 @@ handlers = {
 }
 
 
-def dispatch(yml, k, v):
-    [handler(yml) for handler in handlers[k.lower()][v.lower()]]
+def dispatch(context: AzdohContext, yml: dict, k: str, v: str):
+    [handler(context, yml) for handler in handlers[k.lower()][v.lower()]]
 
 
-def recursive_kv_walk(yml: dict):
+def recursive_kv_walk(context: AzdohContext, yml: dict):
     for k, v in yml.items():
         if isinstance(v, dict) or isinstance(v, list):  # depth-first search
-            recursive_walk(v)
+            recursive_walk(context, v)
         elif k.lower() in handlers.keys() and (
             dispatch_key := next(
                 key_pattern
@@ -31,19 +32,19 @@ def recursive_kv_walk(yml: dict):
                 if re.match(key_pattern, v.lower())
             )
         ):
-            dispatch(yml, k, dispatch_key)
+            dispatch(context, yml, k, dispatch_key)
 
 
-def recursive_walk(yml: dict | list):
+def recursive_walk(context: AzdohContext, yml: dict | list):
     """
     This function recursively walks the parsed dictionary to find tasks for which rules are defined.
     Currently only want to execute shellcheck on Bash@3 tasks
     """
     if isinstance(yml, dict):
-        recursive_kv_walk(yml)
+        recursive_kv_walk(context, yml)
     elif isinstance(yml, list):
         for maybe_dict_or_list in yml:
-            recursive_walk(maybe_dict_or_list)
+            recursive_walk(context, maybe_dict_or_list)
 
 
 @click.command()
@@ -66,7 +67,8 @@ def main(file: str, loglevel: str):
         "r",
     ) as f:
         yml = yaml.safe_load(f)
-    recursive_walk(yml)
+    context = AzdohContext(file=file)
+    recursive_walk(context, yml)
     delete_tmp_dir(tmp_dir)
 
 

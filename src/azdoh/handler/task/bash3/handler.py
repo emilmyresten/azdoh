@@ -1,5 +1,6 @@
 import logging
 
+from azdoh.context import AzdohContext
 from azdoh.common.text import log_handler_start, sanitize
 from azdoh.handler.task.bash3.job.shellcheck import shellcheck
 from azdoh.handler.task.bash3.job.python3_script_sanitycheck import (
@@ -8,7 +9,7 @@ from azdoh.handler.task.bash3.job.python3_script_sanitycheck import (
 from azdoh.handler.task.bash3.job.python3_named_arguments import python3_named_arguments
 
 
-def bash3_handler(task: dict):
+def bash3_handler(_: AzdohContext, task: dict):
     ## all logic for handling bash3 tasks
     display_name = task.get("displayName")
     script = task.get("inputs").get("script")
