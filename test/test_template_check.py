@@ -103,8 +103,6 @@ def test_combo(caplog):
         for log in caplog.records
     ]
 
-    pprint(caplog.records)
-
     assert {
         "msg": "Missing required arguments: [{'name': 'paramOne', 'type': 'string'}]",
         "src": "assert_template_parameters.py",
@@ -121,4 +119,73 @@ def test_combo(caplog):
         "msg": "OK",
         "src": "assert_template_parameters.py",
     } not in log_messages
+    assert result.exit_code == 0
+
+
+def test_noparams(caplog):
+    caplog.set_level(logging.INFO)
+
+    # We need to enter the example project in order to correctly execute azdoh, as it assumes it is being executed in the source root.
+    test_dir = Path(__file__).parent
+    os.chdir((test_dir / "example_project").absolute())
+
+    result = CliRunner().invoke(main, ["-f", "azdo/templates/caller-noparams.yml"])
+
+    log_messages = [
+        {"msg": log.message, "src": log.pathname.split("/")[-1]}
+        for log in caplog.records
+    ]
+
+    assert {
+        "msg": "Missing required arguments: [{'name': 'paramOne', 'type': 'string'}]",
+        "src": "assert_template_parameters.py",
+    } in log_messages
+    assert {
+        "msg": "Default value fallbacks: [{'name': 'paramTwo', 'default': False, 'type': 'boolean'}]",
+        "src": "assert_template_parameters.py",
+    } in log_messages
+    assert result.exit_code == 0
+
+
+def test_of_noparams_with_params(caplog):
+    caplog.set_level(logging.INFO)
+
+    # We need to enter the example project in order to correctly execute azdoh, as it assumes it is being executed in the source root.
+    test_dir = Path(__file__).parent
+    os.chdir((test_dir / "example_project").absolute())
+
+    result = CliRunner().invoke(
+        main, ["-f", "azdo/templates/caller-of-noparams-with-params.yml"]
+    )
+
+    log_messages = [
+        {"msg": log.message, "src": log.pathname.split("/")[-1]}
+        for log in caplog.records
+    ]
+
+    assert {
+        "msg": "Redundant arguments: ['paramOne']",
+        "src": "assert_template_parameters.py",
+    } in log_messages
+    assert result.exit_code == 0
+
+
+def test_of_noparams(caplog):
+    caplog.set_level(logging.INFO)
+
+    # We need to enter the example project in order to correctly execute azdoh, as it assumes it is being executed in the source root.
+    test_dir = Path(__file__).parent
+    os.chdir((test_dir / "example_project").absolute())
+
+    result = CliRunner().invoke(main, ["-f", "azdo/templates/caller-of-noparams.yml"])
+
+    log_messages = [
+        {"msg": log.message, "src": log.pathname.split("/")[-1]}
+        for log in caplog.records
+    ]
+
+    assert {
+        "msg": "OK",
+        "src": "assert_template_parameters.py",
+    } in log_messages
     assert result.exit_code == 0

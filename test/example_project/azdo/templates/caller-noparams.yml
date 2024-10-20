@@ -1,0 +1,2 @@
+steps:
+  - template: /azdo/templates/callee.yml

@@ -5,6 +5,10 @@ from azdoh.common.text import log_job_start
 
 
 def assert_on_keys(actual_parameters: dict, formal_parameters: list[dict]):
+    logging.debug(
+        f"ASSERT_TEMPLATE_PARAMETERS | assert_on_keys | Got arguments: [actual_parameters={actual_parameters}, formal_parameters={formal_parameters}]"
+    )
+
     actual_keys = set(actual_parameters.keys())
     formal_keys = set([parameter["name"] for parameter in formal_parameters])
     disjunction = actual_keys.symmetric_difference(formal_keys)
@@ -41,9 +45,9 @@ def assert_template_parameters(yml: dict, template_yaml: dict):
     log_job_start("Asserting parameters")
 
     logging.debug(
-        f"TEMPLATE/ASSERT_PARAMETERS | assert_parameters | Got arguments: [yml={yml}, template_yaml={template_yaml}]"
+        f"ASSERT_TEMPLATE_PARAMETERS | assert_parameters | Got arguments: [yml={yml}, template_yaml={template_yaml}]"
     )
 
-    actual_parameters = yml.get("parameters")
-    formal_parameters = template_yaml.get("parameters")
+    actual_parameters: dict = yml.get("parameters", {})
+    formal_parameters: list[dict] = template_yaml.get("parameters", [])
     assert_on_keys(actual_parameters, formal_parameters)
