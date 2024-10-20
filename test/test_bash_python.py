@@ -23,7 +23,7 @@ def test_happy_flow(caplog):
     ]
 
     assert {
-        "msg": "[{'path': '/Users/emilmyresten/Development/personal/python/azdoh/test/example_project/src/pkg/example_python.py', 'exists': True}]",
+        "msg": "[{'path': 'src/pkg/example_python.py', 'exists': True}]",
         "src": "python3_script_sanitycheck.py",
     } in log_messages
     assert {"msg": "OK", "src": "python3_named_arguments.py"} in log_messages
@@ -45,7 +45,7 @@ def test_non_existing_file(caplog):
     ]
 
     assert {
-        "msg": "[{'path': '/Users/emilmyresten/Development/personal/python/azdoh/test/example_project/src/pkg/non-existant.py', 'exists': False}]",
+        "msg": "[{'path': 'src/pkg/non-existant.py', 'exists': False}]",
         "src": "python3_script_sanitycheck.py",
     } in log_messages
     assert {"msg": "OK", "src": "python3_named_arguments.py"} not in log_messages
@@ -67,7 +67,7 @@ def test_with_expr_in_path(caplog):
     ]
 
     assert {
-        "msg": "[{'path': '/Users/emilmyresten/Development/personal/python/azdoh/test/example_project/src/pkg/example_python.py', 'exists': True}]",
+        "msg": "[{'path': 'src/pkg/example_python.py', 'exists': True}]",
         "src": "python3_script_sanitycheck.py",
     } in log_messages
     assert {"msg": "OK", "src": "python3_named_arguments.py"} not in log_messages
@@ -89,7 +89,7 @@ def test_without_working_directory(caplog):
     ]
 
     assert {
-        "msg": "[{'path': '/Users/emilmyresten/Development/personal/python/azdoh/test/example_project/src/pkg/example_python.py', 'exists': True}]",
+        "msg": "[{'path': 'src/pkg/example_python.py', 'exists': True}]",
         "src": "python3_script_sanitycheck.py",
     } in log_messages
     assert {"msg": "OK", "src": "python3_named_arguments.py"} not in log_messages
@@ -111,7 +111,7 @@ def test_with_named_args(caplog):
     ]
 
     assert {
-        "msg": "[{'path': '/Users/emilmyresten/Development/personal/python/azdoh/test/example_project/src/pkg/example_python.py', 'exists': True}]",
+        "msg": "[{'path': 'src/pkg/example_python.py', 'exists': True}]",
         "src": "python3_script_sanitycheck.py",
     } in log_messages
     assert {"msg": "OK", "src": "python3_named_arguments.py"} in log_messages
@@ -133,7 +133,7 @@ def test_without_args(caplog):
     ]
 
     assert {
-        "msg": "[{'path': '/Users/emilmyresten/Development/personal/python/azdoh/test/example_project/src/pkg/example_python.py', 'exists': True}]",
+        "msg": "[{'path': 'src/pkg/example_python.py', 'exists': True}]",
         "src": "python3_script_sanitycheck.py",
     } in log_messages
     assert {

@@ -80,8 +80,7 @@ def python3_script_sanitycheck(script: str, working_directory: str) -> list[dict
     sanitized_script = sanitize(script, replacement=".")
     paths = find_python3_script_locations(sanitized_script, working_directory)
     results = [
-        {"path": str(path.absolute()), "exists": check_if_file_exists(path)}
-        for path in paths
+        {"path": str(path), "exists": check_if_file_exists(path)} for path in paths
     ]
     logging.info(results)
 
