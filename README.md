@@ -25,3 +25,4 @@ pipx install . in project root, then invoke azdoh, to reflect new changes use --
 
 ### todo:
 in template handler, error if intermediate directory does not exist
+warn if file does not exist in python script sanitycheck
