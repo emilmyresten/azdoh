@@ -21,3 +21,7 @@ Azdoh assumes it is being invoked from the project root.
 
 ### run as standalone executable:
 pipx install . in project root, then invoke azdoh, to reflect new changes use --force
+
+
+### todo:
+in template handler, error if intermediate directory does not exist
