@@ -1,6 +1,7 @@
 import logging
 from colorlog import ColoredFormatter
 
+# From https://stackoverflow.com/a/23964880
 LOGFORMAT = "%(log_color)s%(levelname)-8s%(reset)s | %(log_color)s%(message)s%(reset)s"
 
 
