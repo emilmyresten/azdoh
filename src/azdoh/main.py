@@ -27,19 +27,17 @@ def recursive_kv_walk(context: AzdohContext, yml: dict):
         if isinstance(v, dict) or isinstance(v, list):  # depth-first search
             recursive_walk(context, v)
         elif k.lower() in handlers.keys() and (
-            dispatch_key := next(
-                (
-                    key_pattern
-                    for key_pattern in handlers[k.lower()].keys()
-                    if re.match(key_pattern, v.lower())
-                ),
-                False,
-            )
+            dispatch_keys := [
+                key_pattern
+                for key_pattern in handlers[k.lower()].keys()
+                if re.match(key_pattern, v.lower())
+            ]
         ):
-            logging.debug(
-                f"MAIN | recursive_kv_walk | dispatching on {k} : {dispatch_key}"
-            )
-            dispatch(context, yml, k, dispatch_key)
+            for dispatch_key in dispatch_keys:
+                logging.debug(
+                    f"MAIN | recursive_kv_walk | dispatching on {k} : {dispatch_key}"
+                )
+                dispatch(context, yml, k, dispatch_key)
 
 
 def recursive_walk(context: AzdohContext, yml: dict | list):
